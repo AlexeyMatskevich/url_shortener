@@ -52,6 +52,7 @@ group :development do
   gem "rubycritic", "~> 4.6"
   gem "super_diff", "~> 0.6.1"
   gem "fasterer", "~> 0.9.0"
+  gem "faker", "~> 2.16"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
