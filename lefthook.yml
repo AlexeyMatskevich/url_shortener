@@ -3,7 +3,7 @@ pre-commit:
   commands:
     rubocop:
       tags: backend lint
-      glob: "{**/bin/*,**/.lefthook/**/*,**/Gemfile,**/*.{rb,erb},!(db/schema.rb)}"
+      glob: "{**/bin/*,**/.lefthook/**/*,**/Gemfile,**/!(schema).{rb,erb}}"
       run: dip bundle_no_tty exec rubocop {staged_files}
     rspec:
       tags: rspec spec backend
@@ -11,7 +11,7 @@ pre-commit:
       run: dip rspec_no_tty --fail-fast {staged_files}
     fasterer:
       tags: backend lint
-      glob: "{**/bin/*,**/.lefthook/**/*,**/Gemfile,**/*.{rb,erb},!(db/schema.rb)}"
+      glob: "{**/bin/*,**/.lefthook/**/*,**/Gemfile,**/!(schema).{rb,erb}}"
       run: dip fasterer {staged_files}
 pre-push:
   parallel: true
