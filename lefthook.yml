@@ -1,0 +1,45 @@
+pre-commit:
+  parallel: true
+  commands:
+    rubocop:
+      tags: backend lint
+      glob: "{**/bin/*,**/.lefthook/**/*,**/Gemfile,**/*.{rb,erb},!(db/schema.rb)}"
+      run: dip bundle_no_tty exec rubocop {staged_files}
+    rspec:
+      tags: rspec spec backend
+      glob: "**/*spec.rb"
+      run: dip rspec_no_tty --fail-fast {staged_files}
+    fasterer:
+      tags: backend lint
+      glob: "{**/bin/*,**/.lefthook/**/*,**/Gemfile,**/*.{rb,erb},!(db/schema.rb)}"
+      run: dip fasterer {staged_files}
+pre-push:
+  parallel: true
+  commands:
+    crystalball:
+      tags: rspec spec backend
+      run: dip crystalball_no_tty --fail-fast
+    gem_audit:
+      tags: backend secure
+      run: dip bundle_no_tty audit check --update
+    database_consistency:
+      tags: backend
+      run: dip database_consistency_no_tty
+    brakeman:
+      tags: backend
+      run: dip bundle_no_tty exec brakeman
+    rubycritic:
+      tags: backend lint
+      glob: "{**/Gemfile,**/*.{rb,erb,ru}}"
+      run: dip rubycritic
+post-checkout:
+  piped: true
+  scripts:
+    "01-bundle-checkinstall":
+      tags: backend
+    "02-db-migrate":
+      tags: backend
+      runner: docker-compose -f docker-compose-dev.yml run --rm rails
+    "03-crystalball-update":
+      tags: rspec backend
+      runner: docker-compose -f docker-compose-dev.yml run --rm -e RAILS_ENV=test rails

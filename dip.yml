@@ -1,0 +1,140 @@
+version: '4.1'
+
+environment:
+  COMPOSE_EXT: development
+
+compose:
+  files:
+    - .docker/docker-compose.$COMPOSE_EXT.yml
+
+interaction:
+  sh:
+    description: Open the shell in app's container
+    service: rails
+    command: sh
+    compose:
+      run_options: [no-deps]
+
+  bundle:
+    description: Run bundle
+    service: rails
+    command: bin/bundle
+    compose_run_options: [no-deps]
+
+  fasterer:
+    description: Run fasterer linter
+    service: rails
+    command: fasterer
+
+  bundle_no_tty:
+    description: Run bundle without TTY for IDE
+    service: rails
+    command: bundle
+    compose_run_options: [no-deps -T]
+
+  rake:
+    description: Run rake
+    service: rails
+    command: bundle exec rake
+
+  rails:
+    description: Run rails
+    service: rails
+    command: bundle exec rails
+    subcommands:
+      s:
+        service: rails
+        compose:
+          run_options: [service-ports]
+
+  ruby:
+    description: Run ruby iterpetator
+    service: rails
+    command: ruby
+
+  # [service-ports] - DIP `use` run instead of `exec` they have different behavior:
+  # that the docker-compose run command does not create any of the ports specified in the service configuration.
+  # This prevents port collisions with already-open ports.
+  rspec:
+    description: Run rspec
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec rspec
+    subcommands:
+      s:
+        service: rails
+        compose:
+          run_options: [service-ports]
+
+  rspec_no_tty:
+    description: Run rspec without TTY for IDE
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec rspec
+    compose_run_options: [-T]
+
+  crystalball:
+    description: Run regression Checker
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec crystalball
+
+  crystalball_no_tty:
+    description: Run regression Checker without TTY for IDE
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec crystalball
+    compose:
+      run_options: [-T]
+
+  database_consistency:
+    description: Run ckeck database consistency
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec database_consistency
+
+  database_consistency_no_tty:
+    description: Run ckeck database consistency without TTY for IDE
+    service: rails
+    environment:
+      RAILS_ENV: test
+    command: bundle exec database_consistency
+    compose:
+      run_options: [-T]
+
+  rubocop:
+    description: Run rubocop linter with standardrb style guide
+    service: rails
+    command: bundle exec rubocop
+    compose_run_options: [no-deps]
+    subcommands:
+      s:
+        description: Run standardrb directly
+        command: bundle exec standardrb
+
+  rubycritic:
+    description: Run rubycritic
+    service: rails
+    command: rubycritic
+
+  psql:
+    description: Run psql
+    service: postgres
+    command: psql -h postgres -U postgres
+    subcommands:
+      dev:
+        description: Run psql with connection to develompent database
+        command: psql -h postgres -U postgres -d url_shortener_development
+      test:
+        description: Run psql with connection to test database
+        command: psql -h postgres -U postgres -d url_shortener_test
+
+provision:
+  - dip compose down --volumes
+  - dip compose up -d postgres
+  - dip sh -c ./bin/setup
