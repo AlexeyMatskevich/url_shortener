@@ -15,7 +15,7 @@ gem "puma", "~> 5.0"
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem "active_interaction", "~> 4.0"
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
@@ -42,7 +42,7 @@ group :development do
   gem "bundler-audit", "~> 0.7.0"
   gem "brakeman", "~> 5.0"
   gem "git", "~> 1.8"
-  gem "amazing_print", "~> 1.2"
+  gem "amazing_print", "~> 1.2", git: "https://github.com/amazing-print/amazing_print"
   gem "rspec-rails", "~> 4.0"
   gem "rspec-openapi", "~> 0.3.14"
   gem "factory_bot_rails", "~> 6.1"
