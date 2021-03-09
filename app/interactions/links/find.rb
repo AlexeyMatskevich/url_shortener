@@ -7,7 +7,7 @@ module Links
     def execute
       link = Link.find_by(short_path: short_path)
 
-      return errors.add(:id, "does not exist") unless link
+      return errors.add(:short_path, "does not exist") unless link
 
       Link.update_counters link, clicked: 1
 

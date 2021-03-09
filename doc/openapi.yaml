@@ -1,0 +1,219 @@
+---
+openapi: 3.0.3
+info:
+  title: app
+  version: 1.0.0
+paths:
+  "/urls":
+    post:
+      summary: create
+      tags:
+      - Url
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    attributes:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+            example:
+              data:
+                type: link
+                attributes:
+                  url: http://bartell.co/roscoe_leuschke
+      responses:
+        '201':
+          description: return created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                      attributes:
+                        type: object
+                        properties:
+                          short_url:
+                            type: string
+              example:
+                data:
+                  id: '628'
+                  type: link
+                  attributes:
+                    short_url: http://www.example.com/urls/iUADBAvT-Ss
+        '422':
+          description: returns unprocessable_entity
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                        source:
+                          type: object
+                          properties:
+                            pointer:
+                              type: string
+                        title:
+                          type: string
+                        detail:
+                          type: string
+                        code:
+                          type: string
+              example:
+                errors:
+                - status: '422'
+                  source:
+                    pointer: "/data/attributes/url"
+                  title: Unprocessable Entity
+                  detail: Url can't be blank
+                  code: blank
+  "/urls/{short_url}":
+    get:
+      summary: show
+      tags:
+      - Url
+      parameters:
+      - name: short_url
+        in: path
+        required: true
+        schema:
+          type: string
+        example: uk5jTRrDQlw
+      responses:
+        '200':
+          description: return success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                      attributes:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+              example:
+                data:
+                  id: '629'
+                  type: link
+                  attributes:
+                    url: http://emard.biz/luz
+        '404':
+          description: return not_found
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                        source:
+                          nullable: true
+                        title:
+                          type: string
+                        detail:
+                          nullable: true
+              example:
+                errors:
+                - status: '404'
+                  source: 
+                  title: Not Found
+                  detail: 
+  "/urls/{short_url}/stats":
+    get:
+      summary: stats
+      tags:
+      - Url
+      parameters:
+      - name: short_url
+        in: path
+        required: true
+        schema:
+          type: string
+        example: p_1G3BoOTVE
+      responses:
+        '200':
+          description: return success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                      attributes:
+                        type: object
+                        properties:
+                          clicked:
+                            type: integer
+              example:
+                data:
+                  id: '630'
+                  type: link
+                  attributes:
+                    clicked: 1
+        '404':
+          description: return not_found
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                        source:
+                          nullable: true
+                        title:
+                          type: string
+                        detail:
+                          nullable: true
+              example:
+                errors:
+                - status: '404'
+                  source: 
+                  title: Not Found
+                  detail: 

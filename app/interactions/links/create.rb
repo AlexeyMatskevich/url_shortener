@@ -16,7 +16,7 @@ module Links
         when proc(&:short_path_taken?)
           next
         else
-          link.save
+          errors.merge!(link.errors) unless link.save
 
           return link
         end
