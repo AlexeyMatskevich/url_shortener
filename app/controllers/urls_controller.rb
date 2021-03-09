@@ -3,7 +3,7 @@ class UrlsController < ApplicationController
     outcome = Links::Create.run(url: jsonapi_deserialize(params, only: [:url])["url"])
 
     if outcome.valid?
-      render json: ::LinkSerializer.new(outcome.result, {fields: {link: [:short_url]}}), status: :created
+      render json: LinkSerializer.new(outcome.result, {fields: {link: [:short_url]}}), status: :created
     else
       # Hack jsonapi gem
       link = Link.new
